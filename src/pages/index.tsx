@@ -16,7 +16,15 @@ export default function LoginPage() {
   return (
     <main className="min-h-screen flex items-center justify-center bg-white px-6">
       <div className="w-full max-w-xs space-y-6">
-        <h1 className="text-3xl font-semibold text-center">SmileSpotter</h1>
+        <div className="flex items-center justify-center space-x-3">
+          <Image
+            src="/yellowsmileyface.png" 
+            alt="Smile Icon"
+            width={64}
+            height={64}
+          />
+          <h1 className="text-3xl font-quicksand text-center">SmileSpotter</h1>
+        </div>
 
         <form className="space-y-4">
           <div>
