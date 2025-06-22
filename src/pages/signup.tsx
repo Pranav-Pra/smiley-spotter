@@ -1,40 +1,48 @@
 import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 
 export default function SignUpPage() {
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
 
-    const [username, setUsername] = useState("");
-    const [password, setPassword] = useState("");
-    const [confirmPassword, setConfirmPassword] = useState("");
+  const handleSignup = async (e: React.FormEvent) => {
+    e.preventDefault();
 
-    const handleSignup = async (e: React.FormEvent) => {
-        e.preventDefault();
+    if (password !== confirmPassword) {
+      alert("Passwords do not match.");
+      return;
+    }
 
-        if (password !== confirmPassword) {
-        alert("Passwords do not match.");
-        return;
-        }
+    const res = await fetch("/api/auth/signup", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username, password }),
+    });
 
-        const res = await fetch("/api/auth/signup", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, password }),
-        });
+    const data = await res.json();
 
-        const data = await res.json();
-
-        if (res.ok) {
-        alert("Signup successful!");
-        window.location.href = "/";
-        } else {
-        alert(`Signup failed: ${data.message}`);
-        }
-    };
+    if (res.ok) {
+      alert("Signup successful!");
+      window.location.href = "/";
+    } else {
+      alert(`Signup failed: ${data.message}`);
+    }
+  };
 
   return (
     <main className="min-h-screen flex items-center justify-center bg-white px-6">
       <div className="w-full max-w-xs space-y-6">
-        <h1 className="text-3xl font-semibold text-center">SmileSpotter</h1>
+        <div className="flex items-center justify-center space-x-3">
+                  <Image
+                    src="/yellowsmileyface.png" 
+                    alt="Smile Icon"
+                    width={64}
+                    height={64}
+                  />
+        <h1 className="text-3xl text-center text-black">SmileSpotter</h1>
+        </div>
 
         <form onSubmit={handleSignup} className="space-y-4">
           <div>
