@@ -21,6 +21,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const db = client.db();
 
     const user = await db.collection('users').findOne({ _id: new ObjectId(decoded.id) });
+    res.status(200).json({ pins: user?.pins ?? [] });
 
     if (!user) return res.status(404).json({ message: "User not found" });
 

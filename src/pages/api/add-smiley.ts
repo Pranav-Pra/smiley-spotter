@@ -8,12 +8,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   // Get username from cookies
   const cookies = parse(req.headers.cookie || '');
   const username = cookies.username;
+  
 
   if (!username) {
     return res.status(401).json({ error: "Unauthorized: No username found in cookies" });
   }
 
-  const { score, lat, lng } = req.body;
+  const { score, lat, lng, image } = req.body;
 
   if (typeof score !== 'number' || typeof lat !== 'number' || typeof lng !== 'number') {
     return res.status(400).json({ error: "Missing or invalid data" });
@@ -27,7 +28,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       { username },
       {
         $inc: { totalPoints: score },
-        $push: { pins: { lat, lng } } as any,
+        $push: { pins: { lat, lng, image} } as any,
       },
       { upsert: true }
     );
