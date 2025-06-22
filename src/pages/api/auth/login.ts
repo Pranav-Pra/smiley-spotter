@@ -25,20 +25,18 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     { expiresIn: '7d' }
   );
 
-  
+ // cookie-based authentiction
 
-  // ✅ Set the cookie
   const cookie = serialize("userToken", token, {
     httpOnly: true,
     path: "/",
-    maxAge: 60 * 60 * 24 * 7, // 1 week
+    maxAge: 60 * 60 * 24 * 7, 
     sameSite: "lax",
     secure: process.env.NODE_ENV === "production",
   });
 
   res.setHeader("Set-Cookie", cookie);
 
-  // ✅ Optionally also set a readable cookie for username
   const usernameCookie = serialize("username", username, {
     path: "/",
     maxAge: 60 * 60 * 24 * 7,

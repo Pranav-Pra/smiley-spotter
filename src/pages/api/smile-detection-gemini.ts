@@ -41,7 +41,7 @@ if (!imageBase64 || !imageBase64.startsWith("data:image/")) {
 
 ---
 
-### 🚫 CRITICAL RULE (Overrides Everything Else):
+### CRITICAL RULE (Overrides Everything Else):
 
 **If the image contains a real human or real animal, and that is the only face-like object present, return 0 immediately. Do not analyze further.**  
 Examples include:
@@ -52,7 +52,7 @@ Even if the human or animal face looks abstract, illustrated, or camouflaged —
 
 ---
 
-### ✅ SECONDARY RULES (Apply only if there is at least one non-living face-like object):
+### SECONDARY RULES (Apply only if there is at least one non-living face-like object):
 
 1. If the image is animated, illustrated, AI-generated, or a cartoon — return 0.
 2. If multiple non-living objects resemble faces, analyze only the **most face-like one**.
@@ -61,7 +61,7 @@ Even if the human or animal face looks abstract, illustrated, or camouflaged —
 
 ---
 
-### 🧠 SCORING METHOD:
+### SCORING METHOD:
 
 Start at **5** if the object has:
 - Two distinct eye-like features
@@ -79,7 +79,7 @@ Start at **5** if the object has:
 
 ---
 
-###OUTPUT RULE:
+### OUTPUT RULE:
 
 Return only **a single whole number from 0 to 10**.  
 No explanation, no units, no punctuation — **just the number**. `,

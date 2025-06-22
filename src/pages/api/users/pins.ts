@@ -8,13 +8,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   if (req.method !== 'GET') return res.status(405).end();
 
   try {
-    // Read token from cookie
+    // token from cookies
     const cookies = req.headers.cookie ? parse(req.headers.cookie) : {};
     const token = cookies.userToken;
 
     if (!token) return res.status(401).json({ message: "Unauthorized: No token" });
 
-    // Verify token
+    // token verified
     const decoded = jwt.verify(token, process.env.JWT_SECRET!) as { id: string };
 
     const client = await clientPromise;

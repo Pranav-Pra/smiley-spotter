@@ -5,7 +5,7 @@ import { parse } from 'cookie';
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') return res.status(405).end();
 
-  // Get username from cookies
+  // get username from cookies
   const cookies = parse(req.headers.cookie || '');
   const username = cookies.username;
   

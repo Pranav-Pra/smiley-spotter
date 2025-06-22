@@ -15,16 +15,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const db = client.db();
     const users = db.collection("users");
 
-    // Check if user already exists
+    // if user exists or not
     const existingUser = await users.findOne({ username });
     if (existingUser) {
       return res.status(400).json({ error: "User already exists" });
     }
 
-    // Hash password
+    // encrypt password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Insert new user with default fields
+    // new user, default fields
     await users.insertOne({
       username,
       password: hashedPassword,

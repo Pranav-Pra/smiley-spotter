@@ -10,12 +10,12 @@ export default function CameraPage() {
 
   if (!file) return;
 
-  // For preview
+  // for preview
   const imageUrl = URL.createObjectURL(file);
   setImage(imageUrl);
   localStorage.setItem("previewImage", imageUrl); // 👈 new key
 
-  // For Gemini
+  // for gemini
   const reader = new FileReader();
   reader.onloadend = () => {
     const base64 = reader.result?.toString();
