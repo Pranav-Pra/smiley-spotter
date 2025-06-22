@@ -19,9 +19,6 @@ export default function Map({ center }: Props) {
         attribution='&copy; <a href="https://osm.org/copyright">OpenStreetMap</a>'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
-      <Marker position={center}>
-        <Popup>Your current location</Popup>
-      </Marker>
     </MapContainer>
   );
 }

@@ -31,11 +31,29 @@ export default function DashboardPage() {
   if (loading) return <p className="text-center p-6">Loading...</p>;
 
   return (
-    <main className="min-h-screen bg-white">
-      <h1 className="text-2xl font-semibold text-center text-black my-4">Smiley Spotter Map</h1>
+    <main className="min-h-screen bg-white relative">
+      <h1 className="text-2xl font-semibold text-center text-black my-4">Points</h1>
       <div className="h-[80vh] w-full px-4">
         <Map center={center} />
       </div>
+    <div className="absolute bottom-6 right-6 z-[1000]">
+    <button onClick={() => router.push("/camera")}>
+        <img
+        src="/yellowsmileyface.png"
+        alt="Add Pin"
+        className="w-20 h-20 object-contain drop-shadow-md hover:scale-105 w-20 h-20 object-contain drop-shadow-md transition-transform hover:scale-105 hover:brightness-9transition-transform"
+        />
+    </button>
+    </div>
+    <button
+    onClick={() => {
+        localStorage.removeItem("token");
+        router.push("/");
+    }}
+    className="absolute top-4 right-4 bg-yellow-400 text-white px-2 py-0 rounded shadow hover:bg-red-600 transition"
+    >
+    Sign Out
+    </button>
     </main>
   );
 }
