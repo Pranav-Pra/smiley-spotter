@@ -12,15 +12,21 @@ export default function DashboardPage() {
   const [loading, setLoading] = useState(true);
   const [center, setCenter] = useState<LatLngExpression>([37.7749, -122.4194]); //SF is defaultt
   const [totalPoints, setTotalPoints] = useState<number | null>(null);
+  const [pins, setPins] = useState<{ lat: number; lng: number }[]>([]);
 
   useEffect(() => {
-  const fetchPoints = async () => {
+  const fetchPointsandPins = async () => {
     try {
-      const res = await fetch("/api/users/points");
-      if (!res.ok) throw new Error("Failed to fetch points");
+      const pointsRes = await fetch("/api/users/points");
+      //const pinsRes = await fetch("/api/users/points");
+      const pinsRes = await fetch("/api/users/pins");
+      if (!pointsRes.ok || !pinsRes.ok) throw new Error("Failed to fetch data");
 
-      const data = await res.json();
-      setTotalPoints(data.totalPoints);
+      const pointsData = await pointsRes.json();
+      const pinsData = await pinsRes.json();
+
+      setTotalPoints(pointsData.totalPoints);
+      setPins(pinsData.pins || []);
     } catch (err) {
       console.error("Error fetching points:", err);
     } finally {
@@ -28,7 +34,7 @@ export default function DashboardPage() {
     }
   };
 
-  fetchPoints();
+  fetchPointsandPins();
 }, []);
 
   if (loading) return <p className="text-center p-6">Loading...</p>;
@@ -52,7 +58,7 @@ export default function DashboardPage() {
   </div>
 
   <div className="h-[80vh] w-full px-4 mt-4">
-    <Map center={center} />
+    <Map center={center} pins={pins}/>
   </div>
 
   <div className="absolute bottom-6 right-6 z-[1000]">
