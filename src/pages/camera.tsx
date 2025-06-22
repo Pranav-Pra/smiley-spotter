@@ -6,19 +6,47 @@ export default function CameraPage() {
   const [image, setImage] = useState<string | null>(null);
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const imageUrl = URL.createObjectURL(file);
-      setImage(imageUrl);
+  const file = e.target.files?.[0];
+
+  if (!file) return;
+
+  // For preview
+  const imageUrl = URL.createObjectURL(file);
+  setImage(imageUrl);
+  localStorage.setItem("previewImage", imageUrl); // 👈 new key
+
+  // For Gemini
+  const reader = new FileReader();
+  reader.onloadend = () => {
+    const base64 = reader.result?.toString();
+    if (base64) {
+      localStorage.setItem("base64Image", base64); // 👈 new key
     }
   };
+  reader.readAsDataURL(file);
+};
+
+// const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+//   const file = e.target.files?.[0];
+//   if (file) {
+//     const reader = new FileReader();
+//     reader.onloadend = () => {
+//       const base64String = reader.result as string;
+//       localStorage.setItem("uploadedImageBase64", base64String);
+//       setImage(base64String); // or image URL if needed
+//     };
+//     reader.readAsDataURL(file);
+//   }
+// };
 
   const handleUpload = () => {
     if (image) {
-      // In real app: upload image or store in global state
-      router.push("/photo");
+        localStorage.setItem("uploadedImage", image);
+        router.push("/photo");
     }
   };
+
+  
 
   return (
     <main className="min-h-screen bg-white flex flex-col items-center justify-center p-4 space-y-6">
