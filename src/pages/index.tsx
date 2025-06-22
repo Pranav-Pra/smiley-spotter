@@ -49,7 +49,7 @@ export default function LoginPage() {
             width={64}
             height={64}
           />
-          <h1 className="text-3xl font-quicksand text-center">SmileSpotter</h1>
+          <h1 className="text-3xl font-quicksand text-center text-black">SmileSpotter</h1>
         </div>
 
         <form onSubmit={handleLogin} className="space-y-4">
