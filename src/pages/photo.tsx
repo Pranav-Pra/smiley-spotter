@@ -1,5 +1,7 @@
+import PlacesAutocomplete from 'react-places-autocomplete';
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
+
 
 export default function PhotoPage() {
   const [image, setImage] = useState<string | null>(null);
@@ -53,8 +55,43 @@ useEffect(() => {
     analyzeImage(storedBase64).then((score) => setScore(score));
   }
 }, []);
-  
 
+const [address, setAddress] = useState("");
+const [coordinates, setCoordinates] = useState<{ lat: number; lng: number }>({ lat: 0, lng: 0 });
+
+const handleSelect = async (value: string) => {
+  setAddress(value);
+  const geocoder = new window.google.maps.Geocoder();
+  geocoder.geocode({ address: value }, (results, status) => {
+    if (status === "OK" && results && results[0]) {
+      const location = results[0].geometry.location;
+      setCoordinates({
+        lat: location.lat(),
+        lng: location.lng(),
+      });
+    } else {
+      console.warn("Geocoding failed:", status);
+    }
+  });
+}
+
+const handleSubmitSmiley = async () => {
+  if (!coordinates.lat || !coordinates.lng) return;
+
+  await fetch("/api/add-smiley", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({
+    score, // ← add this
+    lat: coordinates.lat,
+    lng: coordinates.lng,
+    address,
+  }),
+});
+
+  router.push("/dashboard");
+};
+  
   return (
     <div className="min-h-screen bg-white flex flex-col items-center justify-center px-4 py-6">
       <h2 className="text-xl font-semibold text-black mb-4">
@@ -68,6 +105,40 @@ useEffect(() => {
           className="max-w-xs rounded-lg shadow-md"
         />
       )}
+
+      <PlacesAutocomplete value={address} onChange={setAddress} onSelect={handleSelect}>
+  {({ getInputProps, suggestions, getSuggestionItemProps, loading }) => (
+    <div className="w-full max-w-xs mt-4">
+      <input
+        {...getInputProps({
+          placeholder: "Type address…",
+        })}
+        className="w-full px-3 py-2 border rounded text-black placeholder-gray-600"
+      />
+      <div className="bg-white border mt-1 rounded">
+        {loading && <div className="px-3 py-1 text-gray-500">Loading...</div>}
+        {suggestions.map((suggestion, i) => (
+          <div
+            {...getSuggestionItemProps(suggestion)}
+            key={i}
+            className="px-3 py-1 hover:bg-gray-100 cursor-pointer text-black"
+          >
+            {suggestion.description}
+          </div>
+        ))}
+      </div>
     </div>
+  )}
+</PlacesAutocomplete>
+
+<button
+  onClick={handleSubmitSmiley}
+  className="mt-4 bg-yellow-400 px-6 py-2 rounded hover:bg-yellow-500"
+>
+  Add Smiley
+</button>
+
+    </div>
+    
   );
 }

@@ -41,7 +41,7 @@ export default function SignUpPage() {
                     width={64}
                     height={64}
                   />
-        <h1 className="text-3xl text-center text-black">SmileSpotter</h1>
+        <h1 className="text-3xl font-semibold text-center text-black">SmileSpotter</h1>
         </div>
 
         <form onSubmit={handleSignup} className="space-y-4">

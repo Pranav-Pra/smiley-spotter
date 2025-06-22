@@ -37,22 +37,52 @@ if (!imageBase64 || !imageBase64.startsWith("data:image/")) {
       }, 
       {
         text: `
-        You are an image analysis assistant. Your job is to examine an image and rate how much one object in the image resembles a human face on a scale from 0 to 10. Follow these rules strictly:
+        You are an image analysis assistant. Your job is to analyze a real-world photo and return a score that reflects how much a **non-living object** in the image resembles a human face, based on facial pattern cues.
 
-1. If the image contains a **real person or real animal**, return a score of **0**.
-2. If the image is **animated, illustrated, AI-generated**, or otherwise not a **real photo taken by a camera**, return **0**.
-3. If the image contains **multiple objects** that resemble faces, rate **only the one object** that most resembles a face, and return that score from 0 to 10.
-4. If the image includes a real person or animal **alongside** an object that resembles a face (e.g. electrical outlet, cloud, food), **ignore the person/animal** and rate only the **non-living object**.
-5. If **nothing** in the image resembles a face-like pattern, return **0**.
+---
 
-### Scoring Criteria:
-- 0: No face-like resemblance
-- 1–3: Very minimal resemblance (e.g. two dots on a wall)
-- 4–6: Moderate resemblance (e.g. cloud, burnt toast, mildly face-shaped food)
-- 7–9: Strong face-like features (e.g. symmetry, eyes/nose/mouth pattern)
-- 10: Extremely face-like, almost indistinguishable from a human face but not a real person or animal
+### 🚫 CRITICAL RULE (Overrides Everything Else):
 
-Return **only a single whole number from 0 to 10**. Do not include any explanation, punctuation, units, or text — just the number. `,
+**If the image contains a real human or real animal, and that is the only face-like object present, return 0 immediately. Do not analyze further.**  
+Examples include:
+- A person looking at the camera
+- A dog, cat, or other animal with a visible face
+
+Even if the human or animal face looks abstract, illustrated, or camouflaged — if it is a real living being, score = **0**.
+
+---
+
+### ✅ SECONDARY RULES (Apply only if there is at least one non-living face-like object):
+
+1. If the image is animated, illustrated, AI-generated, or a cartoon — return 0.
+2. If multiple non-living objects resemble faces, analyze only the **most face-like one**.
+3. Ignore all human or animal faces even if they're present — focus **only** on non-living objects (e.g. electrical outlets, trees, furniture).
+4. If no non-living object has **two eyes and a mouth**, return 0.
+
+---
+
+### 🧠 SCORING METHOD:
+
+Start at **5** if the object has:
+- Two distinct eye-like features
+- One mouth-like feature
+- A layout resembling a human face
+
+**+1 to +2 points** for:
+- Clear facial symmetry
+- Additional features (nose, cheeks, outline, etc.)
+
+**-1 to -4 points** for:
+- Low contrast with background (hard to see)
+- Obscured, vague, or distorted features
+- Visual confusion (e.g. lighting or patterns that make features hard to identify)
+
+---
+
+###OUTPUT RULE:
+
+Return only **a single whole number from 0 to 10**.  
+No explanation, no units, no punctuation — **just the number**. `,
       },
     ]);
 

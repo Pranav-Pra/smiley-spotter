@@ -11,49 +11,59 @@ export default function DashboardPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [center, setCenter] = useState<LatLngExpression>([37.7749, -122.4194]); //SF is defaultt
+  const [totalPoints, setTotalPoints] = useState<number | null>(null);
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
+  const fetchPoints = async () => {
+    try {
+      const res = await fetch("/api/users/points");
+      if (!res.ok) throw new Error("Failed to fetch points");
 
-    if (!token) {
-      router.push("/"); // if no token, redirect to login
-    } else {
+      const data = await res.json();
+      setTotalPoints(data.totalPoints);
+    } catch (err) {
+      console.error("Error fetching points:", err);
+    } finally {
       setLoading(false);
-      //user location
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition((pos) => {
-            setCenter([pos.coords.latitude, pos.coords.longitude]);
-            });
-        }
     }
-  }, [router]);
+  };
+
+  fetchPoints();
+}, []);
 
   if (loading) return <p className="text-center p-6">Loading...</p>;
 
   return (
-    <main className="min-h-screen bg-white relative">
-      <h1 className="text-2xl font-semibold text-center text-black my-4">Points</h1>
-      <div className="h-[80vh] w-full px-4">
-        <Map center={center} />
-      </div>
-    <div className="absolute bottom-6 right-6 z-[1000]">
-    <button onClick={() => router.push("/camera")}>
-        <img
-        src="/yellowsmileyface.png"
-        alt="Add Pin"
-        className="w-20 h-20 object-contain drop-shadow-md hover:scale-105 w-20 h-20 object-contain drop-shadow-md transition-transform hover:scale-105 hover:brightness-9transition-transform"
-        />
-    </button>
+   <main className="min-h-screen bg-white relative mb-12">
+  <div className="flex items-center justify-between px-6 mt-6">
+    <div className="flex items-center space-x-4 text-2xl font-semibold text-black">
+      <h1 className="text-2xl font-semibold text-black">Points</h1>
+      <p>{totalPoints ?? "Loading..."}</p>
     </div>
     <button
-    onClick={() => {
+      onClick={() => {
         localStorage.removeItem("token");
         router.push("/");
-    }}
-    className="absolute top-4 right-4 bg-yellow-400 text-white px-2 py-0 rounded shadow hover:bg-red-600 transition"
+      }}
+      className="bg-yellow-400 text-white px-2 py-1 rounded shadow text-sm hover:bg-red-600 transition"
     >
-    Sign Out
+      Sign Out
     </button>
-    </main>
+  </div>
+
+  <div className="h-[80vh] w-full px-4 mt-4">
+    <Map center={center} />
+  </div>
+
+  <div className="absolute bottom-6 right-6 z-[1000]">
+    <button onClick={() => router.push("/camera")}>
+      <img
+        src="/circle button.PNG"
+        alt="Add Pin"
+        className="w-20 h-20 object-contain drop-shadow-md hover:scale-105 transition-transform hover:brightness-95"
+      />
+    </button>
+  </div>
+</main>
   );
 }

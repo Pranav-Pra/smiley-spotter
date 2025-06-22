@@ -32,12 +32,13 @@ export default function LoginPage() {
 
   if (res.ok) {
     alert("Login successful!");
-    localStorage.setItem("token", data.token);
     window.location.href = "/dashboard";
   } else {
     alert(`Login failed: ${data.message}`);
   }
 };
+
+
 
   return (
     <main className="min-h-screen flex items-center justify-center bg-white px-6">
